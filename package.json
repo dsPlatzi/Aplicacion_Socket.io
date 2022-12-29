@@ -1,0 +1,11 @@
+{
+  "name": "aplicacion-socket.io",
+  "version": "1.0.0",
+  "description": "Aplicacion en tiempo real con Socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Boris Munguia",
+  "license": "ISC"
+}
