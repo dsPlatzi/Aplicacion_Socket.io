@@ -16,11 +16,24 @@ app.get('/', (req, res) => {
 });
 
 
+//evento cuando un cliente se conecta
 io.on('connection', (socket) => {
-    console.log(socket.id);
+    console.log("Clientes conectados", io.engine.clientsCount);
+    console.log("Id del socket conectado", socket.id);
+
+    //evento para detectar cuando un cliente se desconecta
+    socket.on('disconnect', () => {
+        console.log("Id del socket desconectado", socket.id);
+    });
+
+    //evento para detectar cuando se pasa de http a ws
+    socket.conn.once("upgrade", () => {
+        console.log("Http a ", socket.conn.transport.name);
+    });
 });
 
 
 httpServer.listen(3000, () => {
+    console.clear();
     console.log('Server is running on port 3000');
 });
