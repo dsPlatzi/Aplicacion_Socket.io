@@ -44,9 +44,39 @@ socket.on("everyone", (data) => {
     console.log(data);
 });
 
+socket.on("saludo", (data) => {
+    console.log(data);
+});
+
 
 //emitir eventos
 const emit = document.getElementById("emit-to-server");
 emit.addEventListener("click", () => {
     socket.emit("emit-to-server", "Hola desde el cliente");
 });
+
+const emitLast = document.getElementById("emit-to-last");
+emitLast.addEventListener("click", () => {
+    socket.emit("emit-to-last", "Hola ultimo socket");
+});
+
+
+//on, once y off
+socket.on("on", (data) => {
+    console.log(data);
+});
+
+socket.once("once", (data) => {
+    console.log(data);
+});
+
+//desactivar un evento
+const listener = () => {
+    console.log("Este evento se desactivo");
+};
+
+socket.on("off", listener);
+
+setTimeout(() => {
+    socket.off("off", listener);
+}, 1500);
