@@ -21,9 +21,6 @@ app.get('/', (req, res) => {
 //evento cuando un cliente se conecta
 io.on('connection', (socket) => {
 
-    //agregar el id del socket a un array
-    socketOnline.push(socket.id);
-
     //eventos disponibles en la libreria
     // console.log("Clientes conectados", io.engine.clientsCount);
     // console.log("Id del socket conectado", socket.id);
@@ -38,37 +35,46 @@ io.on('connection', (socket) => {
     //     console.log("Http a ", socket.conn.transport.name);
     // });
 
-    //emitir un evento al cliente
-    socket.emit("welcome", "Ahora estas conectado");
+    //agregar el id del socket a un array
+    // socketOnline.push(socket.id);
 
-    //emitir un evento a todos los clientes
-    io.emit("everyone", socket.id + " se ha conectado");
+    // //emitir un evento al cliente
+    // socket.emit("welcome", "Ahora estas conectado");
+
+    // //emitir un evento a todos los clientes
+    // io.emit("everyone", socket.id + " se ha conectado");
 
 
-    //dectectar eventos
-    socket.on("emit-to-server", (data) => {
-        console.log(data);
+    // //dectectar eventos
+    // socket.on("emit-to-server", (data) => {
+    //     console.log(data);
+    // });
+
+    // socket.on("emit-to-last", (data) => {
+    //     const lastSocket = socketOnline[socketOnline.length - 1];
+
+    //     //emitir un evento a un cliente
+    //     io.to(lastSocket).emit("saludo", data);
+    // });
+
+
+    // //on, once y off
+    // socket.emit("on", "Este evento se ejecuta cada vez que se emite");
+    // socket.emit("on", "Este evento se ejecuta cada vez que se emite");
+
+    // socket.emit("once", "Este evento se ejecuta una sola vez");
+    // socket.emit("once", "Este evento se ejecuta una sola vez");
+
+    // socket.emit("off", "Este evento sirve para desactivar un evento");
+    // setTimeout(() => {
+    //     socket.emit("off", "Este evento sirve para desactivar un evento");
+    // }, 3000);
+
+
+    //broadcast
+    socket.on("circle position", (position) => {
+        socket.broadcast.emit("circle move", position);
     });
-
-    socket.on("emit-to-last", (data) => {
-        const lastSocket = socketOnline[socketOnline.length - 1];
-
-        //emitir un evento a un cliente
-        io.to(lastSocket).emit("saludo", data);
-    });
-
-
-    //on, once y off
-    socket.emit("on", "Este evento se ejecuta cada vez que se emite");
-    socket.emit("on", "Este evento se ejecuta cada vez que se emite");
-
-    socket.emit("once", "Este evento se ejecuta una sola vez");
-    socket.emit("once", "Este evento se ejecuta una sola vez");
-
-    socket.emit("off", "Este evento sirve para desactivar un evento");
-    setTimeout(() => {
-        socket.emit("off", "Este evento sirve para desactivar un evento");
-    }, 3000);
 });
 
 
