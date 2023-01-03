@@ -83,35 +83,74 @@ const socket = io();
 
 
 //broadcast
-const circle = document.getElementById("circle");
+// const circle = document.getElementById("circle");
 
-const drawCircle = (position) => {
-    circle.style.top = position.clientY;
-    circle.style.left = position.clientX;
-};
+// const drawCircle = (position) => {
+//     circle.style.top = position.clientY;
+//     circle.style.left = position.clientX;
+// };
 
-//funcion para mover el circulo
-const drag = (e) => {
-    const position = {
-        clientX: e.clientX + "px",
-        clientY: e.clientY + "px",
-    };
-    //mover el circulo solo para el cliente
-    drawCircle(position);
-    //mover el circulo para todos los clientes
-    socket.emit("circle position", position);
-};
+// //funcion para mover el circulo
+// const drag = (e) => {
+//     const position = {
+//         clientX: e.clientX + "px",
+//         clientY: e.clientY + "px",
+//     };
+//     //mover el circulo solo para el cliente
+//     drawCircle(position);
+//     //mover el circulo para todos los clientes
+//     socket.emit("circle position", position);
+// };
 
-//funcion para detectar cuando se presiona y mueve el mouse
-document.addEventListener("mousedown", (e) => {
-    document.addEventListener("mousemove", drag);
+// //funcion para detectar cuando se presiona y mueve el mouse
+// document.addEventListener("mousedown", (e) => {
+//     document.addEventListener("mousemove", drag);
+// });
+
+// document.addEventListener("mouseup", () => {
+//     document.removeEventListener("mousemove", drag);
+// });
+
+// //detectar eventos
+// socket.on("circle move", (position) => {
+//     drawCircle(position);
+// });
+
+
+//crear salas
+const connectRoom1 = document.getElementById("connectRoom1");
+const connectRoom2 = document.getElementById("connectRoom2");
+const connectRoom3 = document.getElementById("connectRoom3");
+const sendMessage = document.getElementById("sendMessage");
+
+//enviar la seleccion de salas al servidor
+connectRoom1.addEventListener("click", () => {
+    socket.emit("connect to room", "room1");
 });
 
-document.addEventListener("mouseup", () => {
-    document.removeEventListener("mousemove", drag);
+connectRoom2.addEventListener("click", () => {
+    socket.emit("connect to room", "room2");
 });
 
-//detectar eventos
-socket.on("circle move", (position) => {
-    drawCircle(position);
+connectRoom3.addEventListener("click", () => {
+    socket.emit("connect to room", "room3");
+});
+
+//enviar los mensajes al servidor
+sendMessage.addEventListener("click", () => {
+    const message = prompt("Escribe tu mensaje:");
+
+    socket.emit("message", message);
+});
+
+//recibir los mensajes del servidor
+socket.on("send message", (data) => {
+    const { message, room } = data;
+
+    //crear el elemento que contendra el mensaje
+    const li = document.createElement("li");
+    li.textContent = message;
+
+    //agregar el elemento a la lista
+    document.getElementById(room).appendChild(li);
 });

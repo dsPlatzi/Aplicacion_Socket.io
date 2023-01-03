@@ -72,8 +72,44 @@ io.on('connection', (socket) => {
 
 
     //broadcast
-    socket.on("circle position", (position) => {
-        socket.broadcast.emit("circle move", position);
+    // socket.on("circle position", (position) => {
+    //     socket.broadcast.emit("circle move", position);
+    // });
+
+
+    //crear rooms
+    socket.connectedRoom = "";
+
+    //evento para crear una sala
+    socket.on("connect to room", (room) => {
+        //eliminar socket de una sala
+        socket.leave(socket.connectedRoom);
+
+        //añadir socket a una sala en especifico
+        switch (room) {
+            case "room1":
+                socket.join("room1");
+                socket.connectedRoom = "room1";
+                break;
+            case "room2":
+                socket.join("room2");
+                socket.connectedRoom = "room2";
+                break;
+            case "room3":
+                socket.join("room3");
+                socket.connectedRoom = "room3";
+                break;
+        }
+    });
+
+    //evento para enviar mensajes a una sala en especifico
+    socket.on("message", (message) => {
+        const room = socket.connectedRoom;
+
+        io.to(room).emit("send message", {
+            message,
+            room
+        });
     });
 });
 
